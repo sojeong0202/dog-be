@@ -1,6 +1,17 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 
-const url = process.env.DB_URL;
-let connectDB = new MongoClient(url).connect();
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_URL, {
+      dbName: process.env.DB_NAME,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB 연결 성공");
+  } catch (error) {
+    console.error("MongoDB 연결 실패", error);
+    process.exit(1);
+  }
+};
 
 module.exports = connectDB;
