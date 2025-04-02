@@ -13,7 +13,7 @@ router.get(
   }),
   (req, res) => {
     const token = req.user; // kakaoStrategy에서 넘긴 우리 서버 토큰
-    res.redirect(`http://localhost:8443/?accessToken=${token}`);
+    res.redirect(`http://localhost:3000/?accessToken=${token}`);
   }
 );
 
