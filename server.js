@@ -23,6 +23,6 @@ jwtStrategy();
 app.use("/", authRouter);
 // app.use("/", userRouter);
 
-app.listen(3000, () => {
-  console.log("서버 실행 중");
+app.listen(process.env.PORT, () => {
+  console.log(`${process.env.PORT} 포트에서 서버 실행 중`);
 });
