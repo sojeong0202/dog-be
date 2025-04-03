@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-router.get("/kakao", passport.authenticate("kakao"));
+router.get("/auth/kakao", passport.authenticate("kakao"));
 
 // 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 이동
 router.get(
