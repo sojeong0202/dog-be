@@ -12,13 +12,20 @@ module.exports = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
+          const kakaoId = String(profile.id); // 카카오 ID
           const email = profile._json.kakao_account.email;
           const nickName = profile.displayName;
+          const profileImage = profile._json.properties?.profile_image;
 
-          let user = await User.findOne({ email });
+          let user = await User.findOne({ kakaoId }); // 이메일X, kakaoId로 검색
 
           if (!user) {
-            user = new User({ email, nickName });
+            user = new User({
+              kakaoId,
+              email,
+              nickName,
+              profileImage,
+            });
             await user.save();
           }
 
