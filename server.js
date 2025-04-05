@@ -2,22 +2,27 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./database.js");
 const passport = require("passport");
-const kakaoStrategy = require("./passport/kakaoStrategy");
-const jwtStrategy = require("./passport/jwtStrategy");
+const cors = require("cors");
 
+const jwtStrategy = require("./passport/jwtStrategy");
 const authRouter = require("./routes/auth");
 const dogRouter = require("./routes/dogs");
 // const userRouter = require("./routes/user");
 
 const app = express();
-
 connectDB();
+
+app.use(
+  cors({
+    origin: [process.env.FRONT_ORIGIN, "http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(passport.initialize());
-kakaoStrategy();
 jwtStrategy();
 
 // 라우터 연결
