@@ -1,14 +1,16 @@
 const dogRepository = require("../repositories/dogRepository");
 
 const createDog = async (userId, dogData) => {
-  const { name, age, firstMetAt, photo } = dogData;
+  const { name, birthday, firstMetAt, photo } = dogData;
 
-  if (!name) throw new Error("강아지 이름을 입력해주세요");
+  if (!name || !birthday || !firstMetAt) {
+    throw new Error("이름, 생일, 만난 날짜는 모두 필수입니다.");
+  }
 
   const newDog = await dogRepository.createDog({
     user: userId,
     name,
-    age,
+    birthday,
     firstMetAt,
     photo,
   });

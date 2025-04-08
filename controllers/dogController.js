@@ -9,7 +9,7 @@ const addDog = async (req, res) => {
     // 시간 변환
     const formattedDog = {
       ...newDog.toObject(), // mongoose document → plain object
-      createdAt: formatToKST(newDog.createdAt),
+      birthday: formatToKST(newDog.birthday),
       firstMetAt: formatToKST(newDog.firstMetAt),
     };
 
@@ -19,7 +19,9 @@ const addDog = async (req, res) => {
     });
   } catch (error) {
     console.error("강아지 등록 실패:", error);
-    res.status(500).json({ message: "강아지 추가 중 예기치 못한 오류 발생" });
+    res.status(400).json({
+      message: error.message || "강아지 추가 중 예기치 못한 오류 발생",
+    });
   }
 };
 
