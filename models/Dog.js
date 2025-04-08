@@ -7,9 +7,13 @@ const dogSchema = new mongoose.Schema(
     birthday: { type: Date, required: true },
     firstMetAt: { type: Date, required: true }, // 처음 만난 날
     photo: { type: String },
-    createdAt: { type: Date, default: Date.now },
   },
-  { versionKey: false }
+  {
+    versionKey: false,
+    timestamps: true, // createdAt, updatedAt 자동 생성
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
 // 가상 필드
