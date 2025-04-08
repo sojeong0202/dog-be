@@ -18,6 +18,11 @@ const createDog = async (userId, dogData) => {
   return newDog;
 };
 
+const getDogByUserId = async (userId) => {
+  return await dogRepository.findDogByUserId(userId);
+};
+
 module.exports = {
   createDog,
+  getDogByUserId,
 };
