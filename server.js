@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const jwtStrategy = require("./passport/jwtStrategy");
 const authRouter = require("./routes/auth");
+const dogRouter = require("./routes/dogs");
 // const userRouter = require("./routes/user");
 
 const app = express();
@@ -26,6 +27,7 @@ jwtStrategy();
 
 // 라우터 연결
 app.use("/", authRouter);
+app.use("/dogs", dogRouter);
 // app.use("/", userRouter);
 
 app.listen(process.env.PORT, () => {
