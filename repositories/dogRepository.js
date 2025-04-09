@@ -16,8 +16,14 @@ const updateDogByUserId = async (userId, updateData) => {
   return await Dog.findOneAndUpdate({ user: userId }, { $set: updateData }, { new: true });
 };
 
+// 강아지 삭제
+const deleteDogByUserId = async (userId) => {
+  return await Dog.findOneAndDelete({ user: userId });
+};
+
 module.exports = {
   createDog,
   findDogByUserId,
   updateDogByUserId,
+  deleteDogByUserId,
 };

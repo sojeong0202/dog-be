@@ -77,8 +77,25 @@ const updateMyDog = async (req, res) => {
   }
 };
 
+const deleteMyDog = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const result = await dogService.deleteDogByUser(userId);
+
+    if (!result) {
+      return res.status(404).json({ message: "삭제할 강아지 정보가 없습니다." });
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("강아지 삭제 실패:", error);
+    res.status(500).json({ message: "강아지 삭제 중 예기치 못한 오류 발생" });
+  }
+};
+
 module.exports = {
   addDog,
   getMyDog,
   updateMyDog,
+  deleteMyDog,
 };

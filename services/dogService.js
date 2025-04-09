@@ -30,8 +30,13 @@ const updateDog = async (userId, updateData) => {
   return await dogRepository.updateDogByUserId(userId, updateData);
 };
 
+const deleteDogByUser = async (userId) => {
+  return await dogRepository.deleteDogByUserId(userId);
+};
+
 module.exports = {
   createDog,
   getDogByUserId,
   updateDog,
+  deleteDogByUser,
 };
