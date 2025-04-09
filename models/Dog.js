@@ -11,8 +11,14 @@ const dogSchema = new mongoose.Schema(
   {
     versionKey: false,
     timestamps: true, // createdAt, updatedAt 자동 생성
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString(); // id 필드 추가
+        delete ret._id; // _id 제거
+        return ret;
+      },
+    },
   }
 );
 

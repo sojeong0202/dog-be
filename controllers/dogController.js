@@ -8,7 +8,7 @@ const addDog = async (req, res) => {
 
     // 시간 변환
     const formattedDog = {
-      ...newDog.toObject(), // mongoose document → plain object
+      ...newDog.toJSON(), // mongoose document → plain object
       birthday: formatToKST(newDog.birthday),
       firstMetAt: formatToKST(newDog.firstMetAt),
     };
@@ -35,7 +35,7 @@ const getMyDog = async (req, res) => {
     }
 
     const formattedDog = {
-      ...dog.toObject(),
+      ...dog.toJSON(),
       birthday: formatToKST(dog.birthday),
       firstMetAt: formatToKST(dog.firstMetAt),
     };
@@ -50,7 +50,35 @@ const getMyDog = async (req, res) => {
   }
 };
 
+const updateMyDog = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const updatedDog = await dogService.updateDog(userId, req.body);
+
+    if (!updatedDog) {
+      return res.status(404).json({ message: "등록된 강아지가 없습니다." });
+    }
+
+    const formattedDog = {
+      ...updatedDog.toJSON(),
+      birthday: formatToKST(updatedDog.birthday),
+      firstMetAt: formatToKST(updatedDog.firstMetAt),
+      createdAt: formatToKST(updatedDog.createdAt),
+      updatedAt: formatToKST(updatedDog.updatedAt),
+    };
+
+    res.status(200).json({
+      message: "강아지 수정 완료",
+      dog: formattedDog,
+    });
+  } catch (error) {
+    console.error("강아지 수정 실패:", error);
+    res.status(500).json({ message: "강아지 수정 중 예기치 못한 오류 발생" });
+  }
+};
+
 module.exports = {
   addDog,
   getMyDog,
+  updateMyDog,
 };

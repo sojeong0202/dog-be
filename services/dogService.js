@@ -22,7 +22,16 @@ const getDogByUserId = async (userId) => {
   return await dogRepository.findDogByUserId(userId);
 };
 
+const updateDog = async (userId, updateData) => {
+  if (!updateData.name && !updateData.birthday && !updateData.firstMetAt && !updateData.photo) {
+    throw new Error("수정할 필드를 최소 1개 이상 입력해주세요.");
+  }
+
+  return await dogRepository.updateDogByUserId(userId, updateData);
+};
+
 module.exports = {
   createDog,
   getDogByUserId,
+  updateDog,
 };
