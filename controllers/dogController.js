@@ -8,7 +8,7 @@ const addDog = async (req, res) => {
 
     // 시간 변환
     const formattedDog = {
-      ...newDog.toJSON(), // mongoose document → plain object
+      ...newDog.toJSON(),
       birthday: formatToKST(newDog.birthday),
       firstMetAt: formatToKST(newDog.firstMetAt),
     };
@@ -20,7 +20,7 @@ const addDog = async (req, res) => {
   } catch (error) {
     console.error("강아지 등록 실패:", error);
     res.status(400).json({
-      message: error.message || "강아지 추가 중 예기치 못한 오류 발생",
+      message: error.message || "강아지 추가 중 예기치 않은 오류 발생",
     });
   }
 };
@@ -46,7 +46,7 @@ const getMyDog = async (req, res) => {
     });
   } catch (error) {
     console.error("강아지 조회 실패:", error);
-    res.status(500).json({ message: "강아지 조회 중 예기치 못한 오류 발생" });
+    res.status(500).json({ message: "강아지 조회 중 예기치 않은 오류 발생" });
   }
 };
 
@@ -73,7 +73,7 @@ const updateMyDog = async (req, res) => {
     });
   } catch (error) {
     console.error("강아지 수정 실패:", error);
-    res.status(500).json({ message: "강아지 수정 중 예기치 못한 오류 발생" });
+    res.status(500).json({ message: "강아지 수정 중 예기치 않은 오류 발생" });
   }
 };
 
@@ -89,7 +89,7 @@ const deleteMyDog = async (req, res) => {
     res.sendStatus(204);
   } catch (error) {
     console.error("강아지 삭제 실패:", error);
-    res.status(500).json({ message: "강아지 삭제 중 예기치 못한 오류 발생" });
+    res.status(500).json({ message: "강아지 삭제 중 예기치 않은 오류 발생" });
   }
 };
 
