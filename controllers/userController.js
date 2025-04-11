@@ -1,6 +1,19 @@
 const userService = require("../services/userService");
 
-const getMyProfile = async (req, res) => {
+const getUserSummary = async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json({
+      nickName: user.nickName,
+      profileImage: user.profileImage,
+    });
+  } catch (error) {
+    console.error("사용자 간단 조회 실패:", error);
+    res.status(500).json({ message: "사용자 정보 조회 중 예기치 않은 오류 발생" });
+  }
+};
+
+const getUserDetail = async (req, res) => {
   try {
     const user = req.user; // passport-jwt로 인증된 사용자
 
@@ -15,7 +28,7 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-const updateMyProfile = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
     const userId = req.user._id;
     const updatedUser = await userService.updateProfile(userId, req.body);
@@ -39,6 +52,7 @@ const updateMyProfile = async (req, res) => {
 };
 
 module.exports = {
-  getMyProfile,
-  updateMyProfile,
+  getUserSummary,
+  getUserDetail,
+  updateUser,
 };

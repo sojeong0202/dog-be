@@ -1,7 +1,7 @@
 const dogService = require("../services/dogService");
 const formatToKST = require("../utils/formatDate");
 
-const addDog = async (req, res) => {
+const addMyDog = async (req, res) => {
   try {
     const userId = req.user._id;
     const newDog = await dogService.createDog(userId, req.body);
@@ -25,7 +25,26 @@ const addDog = async (req, res) => {
   }
 };
 
-const getMyDog = async (req, res) => {
+const getMyDogSummary = async (req, res) => {
+  try {
+    const dog = await dogService.getDogByUserId(req.user._id);
+
+    if (!dog) {
+      return res.status(404).json({ message: "등록된 강아지가 없습니다." });
+    }
+
+    res.status(200).json({
+      name: dog.name,
+      photo: dog.photo,
+      togetherFor: dog.togetherFor,
+    });
+  } catch (error) {
+    console.error("강아지 간단 조회 실패:", error);
+    res.status(500).json({ message: "강아지 정보 조회 중 예기치 않은 오류 발생" });
+  }
+};
+
+const getMyDogDetail = async (req, res) => {
   try {
     const userId = req.user._id;
     const dog = await dogService.getDogByUserId(userId);
@@ -94,8 +113,9 @@ const deleteMyDog = async (req, res) => {
 };
 
 module.exports = {
-  addDog,
-  getMyDog,
+  addMyDog,
+  getMyDogSummary,
+  getMyDogDetail,
   updateMyDog,
   deleteMyDog,
 };
