@@ -7,7 +7,8 @@ const cors = require("cors");
 const jwtStrategy = require("./passport/jwtStrategy");
 const authRouter = require("./routes/auth");
 const dogRouter = require("./routes/dogs");
-const userRouter = require("./routes/user");
+const userRouter = require("./routes/users");
+const questionRouter = require("./routes/questions");
 
 const app = express();
 connectDB();
@@ -29,6 +30,7 @@ jwtStrategy();
 app.use("/", authRouter);
 app.use("/dogs", dogRouter);
 app.use("/users/me", userRouter);
+app.use("/questions", questionRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`${process.env.PORT} 포트에서 서버 실행 중`);
