@@ -18,4 +18,8 @@ module.exports = {
 
   // Question-related errors (3000 ~ 3099)
   // Answer-related errors (4000 ~ 4099)
+
+  // Auth-related errors (5000 ~ 5099)
+  AUTH_KAKAO_UNAUTHORIZED: 5001,
+  AUTH_KAKAO_FAILED: 5002,
 };
