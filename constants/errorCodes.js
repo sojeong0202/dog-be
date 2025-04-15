@@ -12,6 +12,10 @@ module.exports = {
   DOG_NOT_FOUND_FOR_DELETE: 1008,
 
   // User-related errors (2000 ~ 2099)
+  USER_FETCHED_FAILED: 2001,
+  USER_UPDATE_FAILED: 2002,
+  USER_NOT_FOUND: 2003,
+
   // Question-related errors (3000 ~ 3099)
   // Answer-related errors (4000 ~ 4099)
 };
