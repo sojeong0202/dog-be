@@ -36,8 +36,11 @@ module.exports = {
 
   // Auth
 
+  // 성공
+  AUTH_KAKAO_SUCCESS: "카카오 로그인 성공",
   // 401
   AUTH_KAKAO_UNAUTHORIZED: "카카오 인증에 실패했습니다.",
+  AUTH_UNAUTHORIZED: "인증되지 않은 사용자입니다.",
   // 500
   AUTH_KAKAO_FAILED: "카카오 로그인 처리 중 예기치 않은 오류가 발생했습니다.",
 };

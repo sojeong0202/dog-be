@@ -24,4 +24,5 @@ module.exports = {
   // Auth-related errors (5000 ~ 5099)
   AUTH_KAKAO_UNAUTHORIZED: 5001,
   AUTH_KAKAO_FAILED: 5002,
+  AUTH_UNAUTHORIZED: 5003,
 };
