@@ -28,6 +28,12 @@ module.exports = {
   USER_FETCHED_FAILED: "사용자 정보 조회 중 예기치 않은 오류 발생",
   USER_UPDATE_FAILED: "프로필 수정 중 예기치 않은 오류 발생",
 
+  // Question
+
+  QUESTION_PROVIDE_FAILED: "질문 제공 중 예기치 않은 오류 발생",
+  QUESTION_PROVIDED: "질문 제공 성공",
+  ALL_QUESTIONS_ANSWERED: "모든 질문에 답변했습니다!",
+
   // Auth
 
   // 401

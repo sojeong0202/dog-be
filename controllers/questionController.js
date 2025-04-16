@@ -1,23 +1,38 @@
 const questionService = require("../services/questionService");
+const STATUS = require("../constants/statusCodes");
+const ERROR_CODES = require("../constants/errorCodes");
+const MESSAGES = require("../constants/messages");
 
 const getUnansweredQuestion = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const question = await questionService.getUnansweredQuestion(userId);
+    const question = await questionService.getUnansweredQuestion(req.user._id);
 
     if (!question) {
-      return res.status(200).json({ message: "모든 질문에 답변했습니다!" });
+      return res.status(200).json({
+        status: STATUS.EMPTY,
+        message: MESSAGES.ALL_QUESTIONS_ANSWERED,
+      });
     }
 
+    const { _id, text, createdAt, updatedAt } = question;
+
     res.status(200).json({
-      _id: question._id,
-      text: question.text,
-      createdAt: question.createdAt,
-      updatedAt: question.updatedAt,
+      status: STATUS.SUCCESS,
+      message: MESSAGES.QUESTION_PROVIDED,
+      question: {
+        id: _id,
+        text,
+        createdAt,
+        updatedAt,
+      },
     });
   } catch (error) {
-    console.error("질문 제공 실패:", error);
-    res.status(500).json({ message: "질문 제공 중 예기치 않은 오류 발생" });
+    console.error("[QUESTION] 질문 제공 실패:", error);
+    res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.QUESTION_PROVIDE_FAILED,
+      message: MESSAGES.QUESTION_PROVIDE_FAILED,
+    });
   }
 };
 

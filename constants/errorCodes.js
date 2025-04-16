@@ -17,6 +17,8 @@ module.exports = {
   USER_NOT_FOUND: 2003,
 
   // Question-related errors (3000 ~ 3099)
+  QUESTION_PROVIDE_FAILED: 3001,
+
   // Answer-related errors (4000 ~ 4099)
 
   // Auth-related errors (5000 ~ 5099)
