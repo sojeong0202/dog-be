@@ -1,5 +1,6 @@
 const dogService = require("../services/dogService");
 const formatToKST = require("../utils/formatDate");
+const STATUS = require("../constants/statusCodes");
 const ERROR_CODES = require("../constants/errorCodes");
 const MESSAGES = require("../constants/messages");
 
@@ -15,6 +16,7 @@ const addMyDog = async (req, res) => {
     };
 
     res.status(201).json({
+      status: STATUS.SUCCESS,
       message: MESSAGES.DOG_CREATED,
       dog: formattedDog,
     });
@@ -23,12 +25,14 @@ const addMyDog = async (req, res) => {
 
     if (error.name === "ValidationError") {
       return res.status(400).json({
+        status: STATUS.ERROR,
         error_code: ERROR_CODES.DOG_CREATE_VALIDATION_FAILED,
         message: MESSAGES.DOG_CREATE_VALIDATION_FAILED,
       });
     }
 
     return res.status(500).json({
+      status: STATUS.ERROR,
       error_code: ERROR_CODES.DOG_CREATE_SERVER_FAILED,
       message: MESSAGES.DOG_CREATE_FAILED,
     });
@@ -41,22 +45,28 @@ const getMyDogSummary = async (req, res) => {
 
     if (!dog) {
       return res.status(404).json({
+        status: STATUS.EMPTY,
         error_code: ERROR_CODES.DOG_NOT_FOUND,
         message: MESSAGES.DOG_NOT_FOUND,
       });
     }
 
+    const { _id, name, photo, togetherFor } = dog;
+
     res.status(200).json({
+      status: STATUS.SUCCESS,
       message: MESSAGES.DOG_FETCHED,
       dog: {
-        name: dog.name,
-        photo: dog.photo,
-        togetherFor: dog.togetherFor,
+        id: _id,
+        name,
+        photo,
+        togetherFor,
       },
     });
   } catch (error) {
     console.error("[DOG] 간단 조회 실패:", error);
     res.status(500).json({
+      status: STATUS.ERROR,
       error_code: ERROR_CODES.DOG_FETCHED_FAILED,
       message: MESSAGES.DOG_FETCHED_FAILED,
     });
@@ -69,6 +79,7 @@ const getMyDogDetail = async (req, res) => {
 
     if (!dog) {
       return res.status(404).json({
+        status: STATUS.EMPTY,
         error_code: ERROR_CODES.DOG_NOT_FOUND,
         message: MESSAGES.DOG_NOT_FOUND,
       });
@@ -81,12 +92,14 @@ const getMyDogDetail = async (req, res) => {
     };
 
     res.status(200).json({
+      status: STATUS.SUCCESS,
       message: MESSAGES.DOG_FETCHED,
       dog: formattedDog,
     });
   } catch (error) {
     console.error("[DOG] 상세 조회 실패:", error);
     res.status(500).json({
+      status: STATUS.ERROR,
       error_code: ERROR_CODES.DOG_FETCHED_FAILED,
       message: MESSAGES.DOG_FETCHED_FAILED,
     });
@@ -99,6 +112,7 @@ const updateMyDog = async (req, res) => {
 
     if (!updatedDog) {
       return res.status(404).json({
+        status: STATUS.EMPTY,
         error_code: ERROR_CODES.DOG_NOT_FOUND_FOR_UPDATE,
         message: MESSAGES.DOG_NOT_FOUND_FOR_UPDATE,
       });
@@ -113,12 +127,14 @@ const updateMyDog = async (req, res) => {
     };
 
     res.status(200).json({
+      status: STATUS.SUCCESS,
       message: MESSAGES.DOG_UPDATED,
       dog: formattedDog,
     });
   } catch (error) {
     console.error("[DOG] 수정 실패:", error);
     res.status(500).json({
+      status: STATUS.ERROR,
       error_code: ERROR_CODES.DOG_UPDATE_FAILED,
       message: MESSAGES.DOG_UPDATE_FAILED,
     });
@@ -131,6 +147,7 @@ const deleteMyDog = async (req, res) => {
 
     if (!result) {
       return res.status(404).json({
+        status: STATUS.EMPTY,
         error_code: ERROR_CODES.DOG_NOT_FOUND_FOR_DELETE,
         message: MESSAGES.DOG_NOT_FOUND_FOR_DELETE,
       });
@@ -140,6 +157,7 @@ const deleteMyDog = async (req, res) => {
   } catch (error) {
     console.error("[DOG] 삭제 실패:", error);
     res.status(500).json({
+      status: STATUS.ERROR,
       error_code: ERROR_CODES.DOG_DELETE_FAILED,
       message: MESSAGES.DOG_DELETE_FAILED,
     });
