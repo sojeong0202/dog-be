@@ -20,6 +20,8 @@ module.exports = {
   QUESTION_PROVIDE_FAILED: 3001,
 
   // Answer-related errors (4000 ~ 4099)
+  ANSWER_VALIDATION_FAILED: 4001,
+  ANSWER_CREATE_FAILED: 4002,
 
   // Auth-related errors (5000 ~ 5099)
   AUTH_KAKAO_UNAUTHORIZED: 5001,
