@@ -9,6 +9,7 @@ const authRouter = require("./routes/auth");
 const dogRouter = require("./routes/dogs");
 const userRouter = require("./routes/users");
 const questionRouter = require("./routes/questions");
+const answerRouter = require("./routes/answers");
 
 const { handleAuthError } = require("./middlewares/errorHandler");
 
@@ -33,6 +34,7 @@ app.use("/", authRouter);
 app.use("/dogs", dogRouter);
 app.use("/users/me", userRouter);
 app.use("/questions", questionRouter);
+app.use("/answers", answerRouter);
 
 app.use(handleAuthError);
 

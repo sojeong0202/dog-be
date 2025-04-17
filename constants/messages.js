@@ -30,9 +30,20 @@ module.exports = {
 
   // Question
 
-  QUESTION_PROVIDE_FAILED: "질문 제공 중 예기치 않은 오류 발생",
+  // 성공
   QUESTION_PROVIDED: "질문 제공 성공",
   ALL_QUESTIONS_ANSWERED: "모든 질문에 답변했습니다!",
+  // 500
+  QUESTION_PROVIDE_FAILED: "질문 제공 중 예기치 않은 오류 발생",
+
+  // Answer
+
+  // 성공
+  ANSWER_CREATED: "응답 저장 완료",
+  // 400
+  ANSWER_VALIDATION_FAILED: "필수 입력값이 누락되었습니다.",
+  // 500
+  ANSWER_CREATE_FAILED: "응답 저장 중 예기치 않은 오류가 발생했습니다.",
 
   // Auth
 
