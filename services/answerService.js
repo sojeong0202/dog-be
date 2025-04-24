@@ -12,6 +12,11 @@ const createAnswer = async (userId, answerData) => {
   return await answerRepository.createAnswer(newAnswer);
 };
 
+const getAllAnswersByUser = async (userId) => {
+  return await answerRepository.findAllAnswersByUserId(userId);
+};
+
 module.exports = {
   createAnswer,
+  getAllAnswersByUser,
 };

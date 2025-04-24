@@ -40,10 +40,13 @@ module.exports = {
 
   // 성공
   ANSWER_CREATED: "응답 저장 완료",
+  ANSWER_FETCHED: "응답 목록 조회 성공",
+  ANSWER_LIST_EMPTY: "저장된 응답이 없습니다.",
   // 400
   ANSWER_VALIDATION_FAILED: "필수 입력값이 누락되었습니다.",
   // 500
   ANSWER_CREATE_FAILED: "응답 저장 중 예기치 않은 오류가 발생했습니다.",
+  ANSWER_FETCH_FAILED: "응답 조회 중 예기치 않은 오류가 발생했습니다.",
 
   // Auth
 
