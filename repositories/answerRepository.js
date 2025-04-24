@@ -5,6 +5,11 @@ const createAnswer = async (answerData) => {
   return await answer.save();
 };
 
+const findAllAnswersByUserId = async (userId) => {
+  return await Answer.find({ userId, isDeleted: false }).sort({ createdAt: -1 });
+};
+
 module.exports = {
   createAnswer,
+  findAllAnswersByUserId,
 };

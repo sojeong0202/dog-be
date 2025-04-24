@@ -22,6 +22,8 @@ module.exports = {
   // Answer-related errors (4000 ~ 4099)
   ANSWER_VALIDATION_FAILED: 4001,
   ANSWER_CREATE_FAILED: 4002,
+  ANSWER_FETCH_FAILED: 4003,
+  ANSWER_NOT_FOUND: 4004,
 
   // Auth-related errors (5000 ~ 5099)
   AUTH_KAKAO_UNAUTHORIZED: 5001,
