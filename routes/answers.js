@@ -6,5 +6,10 @@ const answerController = require("../controllers/answerController");
 router.post("/", isAuthenticated, answerController.createAnswer);
 router.get("/", isAuthenticated, answerController.getAllAnswers);
 router.get("/calendar", isAuthenticated, answerController.getAnswersByYearAndMonth);
+router.get(
+  "/calendar/summary/:answerId",
+  isAuthenticated,
+  answerController.getAnswerSummaryByAnswerId
+);
 
 module.exports = router;

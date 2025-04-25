@@ -23,8 +23,16 @@ const findAnswersByUserAndYearAndMonth = async (userId, year, month) => {
   }).sort({ createdAt: 1 });
 };
 
+const findAnswerSummaryByAnswerId = async (userId, answerId) => {
+  return await Answer.findOne(
+    { _id: answerId, userId, isDeleted: false },
+    { questionText: 1, createdAt: 1 }
+  );
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
   findAnswersByUserAndYearAndMonth,
+  findAnswerSummaryByAnswerId,
 };

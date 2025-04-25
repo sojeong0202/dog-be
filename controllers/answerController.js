@@ -84,7 +84,7 @@ const getAnswersByYearAndMonth = async (req, res) => {
     if (!answers.length) {
       return res.status(200).json({
         status: STATUS.EMPTY,
-        message: MESSAGES.NO_ANSWER_THIS_MONTH,
+        message: MESSAGES.ANSWER_THIS_MONTH_LIST_EMPTY,
         answers: [],
       });
     }
@@ -109,8 +109,44 @@ const getAnswersByYearAndMonth = async (req, res) => {
   }
 };
 
+const getAnswerSummaryByAnswerId = async (req, res) => {
+  try {
+    const { answerId } = req.params;
+
+    const answer = await answerService.getAnswerSummaryByAnswerId(req.user._id, answerId);
+
+    if (!answer) {
+      return res.status(404).json({
+        status: STATUS.EMPTY,
+        error_code: ERROR_CODES.ANSWER_SUMMARY_NOT_FOUND,
+        message: MESSAGES.ANSWER_SUMMARY_NOT_FOUND,
+      });
+    }
+
+    const { _id, questionText, createdAt } = answer;
+
+    res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGES.ANSWER_SUMMARY_FETCHED,
+      answer: {
+        id: _id,
+        questionText,
+        createdAt: formatToKST(createdAt),
+      },
+    });
+  } catch (error) {
+    console.error("[ANSWER] 간단 응답 조회 실패:", error);
+    res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.ANSWER_FETCH_SUMMARY_FAILED,
+      message: MESSAGES.ANSWER_FETCH_SUMMARY_FAILED,
+    });
+  }
+};
+
 module.exports = {
   createAnswer,
   getAllAnswers,
   getAnswersByYearAndMonth,
+  getAnswerSummaryByAnswerId,
 };

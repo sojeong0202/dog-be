@@ -20,8 +20,13 @@ const getAnswersByYearAndMonth = async (userId, year, month) => {
   return await answerRepository.findAnswersByUserAndYearAndMonth(userId, year, month);
 };
 
+const getAnswerSummaryByAnswerId = async (userId, answerId) => {
+  return await answerRepository.findAnswerSummaryByAnswerId(userId, answerId);
+};
+
 module.exports = {
   createAnswer,
   getAllAnswersByUser,
   getAnswersByYearAndMonth,
+  getAnswerSummaryByAnswerId,
 };
