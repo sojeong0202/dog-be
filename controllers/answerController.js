@@ -118,8 +118,8 @@ const getAnswerSummaryByAnswerId = async (req, res) => {
     if (!answer) {
       return res.status(404).json({
         status: STATUS.EMPTY,
-        error_code: ERROR_CODES.ANSWER_SUMMARY_NOT_FOUND,
-        message: MESSAGES.ANSWER_SUMMARY_NOT_FOUND,
+        error_code: ERROR_CODES.ANSWER_NOT_FOUND,
+        message: MESSAGES.ANSWER_NOT_FOUND,
       });
     }
 
@@ -144,9 +144,40 @@ const getAnswerSummaryByAnswerId = async (req, res) => {
   }
 };
 
+const getAnswerDetailByAnswerId = async (req, res) => {
+  try {
+    const { answerId } = req.params;
+    const userId = req.user._id;
+
+    const answer = await answerService.getAnswerDetailByAnswerId(userId, answerId);
+
+    if (!answer) {
+      return res.status(404).json({
+        status: STATUS.EMPTY,
+        error_code: ERROR_CODES.ANSWER_NOT_FOUND,
+        message: MESSAGES.ANSWER_NOT_FOUND,
+      });
+    }
+
+    res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGES.ANSWER_FETCHED_DETAIL,
+      answer: answer.toJSON(),
+    });
+  } catch (error) {
+    console.error("[ANSWER] 상세 조회 실패:", error);
+    res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.ANSWER_FETCH_DETAIL_FAILED,
+      message: MESSAGES.ANSWER_FETCH_DETAIL_FAILED,
+    });
+  }
+};
+
 module.exports = {
   createAnswer,
   getAllAnswers,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
+  getAnswerDetailByAnswerId,
 };

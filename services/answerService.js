@@ -24,9 +24,14 @@ const getAnswerSummaryByAnswerId = async (userId, answerId) => {
   return await answerRepository.findAnswerSummaryByAnswerId(userId, answerId);
 };
 
+const getAnswerDetailByAnswerId = async (userId, answerId) => {
+  return await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
+};
+
 module.exports = {
   createAnswer,
   getAllAnswersByUser,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
+  getAnswerDetailByAnswerId,
 };
