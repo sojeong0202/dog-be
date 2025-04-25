@@ -45,15 +45,17 @@ module.exports = {
   ANSWER_MONTHLY_FETCHED: "월별 응답 목록 조회 성공",
   ANSWER_THIS_MONTH_LIST_EMPTY: "해당 월에는 응답이 없습니다.",
   ANSWER_SUMMARY_FETCHED: "응답 간단 조회 성공",
+  ANSWER_FETCHED_DETAIL: "응답 상세 조회 성공",
   // 400
   ANSWER_VALIDATION_FAILED: "필수 입력값이 누락되었습니다.",
   ANSWER_QUERY_VALIDATION_FAILED: "year 또는 month가 누락되었습니다.",
-  ANSWER_SUMMARY_NOT_FOUND: "요청하신 응답이 존재하지 않습니다.",
+  ANSWER_NOT_FOUND: "해당 응답을 찾을 수 없습니다.",
   // 500
   ANSWER_CREATE_FAILED: "응답 저장 중 예기치 않은 오류 발생",
   ANSWER_FETCH_ALL_FAILED: "응답 조회 중 예기치 않은 오류 발생",
   ANSWER_FETCH_MONTHLY_FAILED: "월별 응답 목록 조회 중 예기치 않은 오류 발생",
   ANSWER_FETCH_SUMMARY_FAILED: "응답 간단 조회 중 예기치 않은 오류 발생",
+  ANSWER_FETCH_DETAIL_FAILED: "응답 상세 조회 중 예기치 않은 오류 발생",
 
   // Auth
 

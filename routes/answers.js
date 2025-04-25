@@ -11,5 +11,6 @@ router.get(
   isAuthenticated,
   answerController.getAnswerSummaryByAnswerId
 );
+router.get("/:answerId/detail", isAuthenticated, answerController.getAnswerDetailByAnswerId);
 
 module.exports = router;

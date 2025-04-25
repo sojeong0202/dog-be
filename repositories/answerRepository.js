@@ -30,9 +30,18 @@ const findAnswerSummaryByAnswerId = async (userId, answerId) => {
   );
 };
 
+const findAnswerDetailByAnswerId = async (userId, answerId) => {
+  return await Answer.findOne({
+    _id: answerId,
+    userId,
+    isDeleted: false,
+  });
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
   findAnswersByUserAndYearAndMonth,
   findAnswerSummaryByAnswerId,
+  findAnswerDetailByAnswerId,
 };
