@@ -9,7 +9,22 @@ const findAllAnswersByUserId = async (userId) => {
   return await Answer.find({ userId, isDeleted: false }).sort({ createdAt: -1 });
 };
 
+const findAnswersByUserAndYearAndMonth = async (userId, year, month) => {
+  const startDate = new Date(year, month - 1, 1); // 해당 월의 1일
+  const endDate = new Date(year, month, 1); // 다음 달의 1일
+
+  return await Answer.find({
+    userId,
+    isDeleted: false,
+    createdAt: {
+      $gte: startDate,
+      $lt: endDate,
+    },
+  }).sort({ createdAt: 1 });
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
+  findAnswersByUserAndYearAndMonth,
 };

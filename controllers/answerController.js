@@ -54,15 +54,57 @@ const getAllAnswers = async (req, res) => {
 
     res.status(200).json({
       status: STATUS.SUCCESS,
-      message: MESSAGES.ANSWER_FETCHED,
+      message: MESSAGES.ANSWER_FETCHED_ALL,
       answers: formatted,
     });
   } catch (error) {
     console.error("[ANSWER] 전체 응답 조회 실패:", error);
     res.status(500).json({
       status: STATUS.ERROR,
-      error_code: ERROR_CODES.ANSWER_FETCH_FAILED,
-      message: MESSAGES.ANSWER_FETCH_FAILED,
+      error_code: ERROR_CODES.ANSWER_FETCH_ALL_FAILED,
+      message: MESSAGES.ANSWER_FETCH_ALL_FAILED,
+    });
+  }
+};
+
+const getAnswersByYearAndMonth = async (req, res) => {
+  try {
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      return res.status(400).json({
+        status: STATUS.ERROR,
+        error_code: ERROR_CODES.ANSWER_QUERY_VALIDATION_FAILED,
+        message: MESSAGES.ANSWER_QUERY_VALIDATION_FAILED,
+      });
+    }
+
+    const answers = await answerService.getAnswersByYearAndMonth(req.user._id, year, month);
+
+    if (!answers.length) {
+      return res.status(200).json({
+        status: STATUS.EMPTY,
+        message: MESSAGES.NO_ANSWER_THIS_MONTH,
+        answers: [],
+      });
+    }
+
+    const result = answers.map((a) => ({
+      id: a._id,
+      date: new Date(a.createdAt).getDate(),
+    }));
+
+    res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGES.ANSWER_MONTHLY_FETCHED,
+      answers: result,
+    });
+  } catch (error) {
+    console.error("[ANSWER] 월별 조회 실패:", error);
+    res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.ANSWER_FETCH_MONTHLY_FAILED,
+      message: MESSAGES.ANSWER_FETCH_MONTHLY_FAILED,
     });
   }
 };
@@ -70,4 +112,5 @@ const getAllAnswers = async (req, res) => {
 module.exports = {
   createAnswer,
   getAllAnswers,
+  getAnswersByYearAndMonth,
 };
