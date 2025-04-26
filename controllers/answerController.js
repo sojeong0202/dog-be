@@ -159,10 +159,16 @@ const getAnswerDetailByAnswerId = async (req, res) => {
       });
     }
 
+    const formattedAnswer = {
+      ...answer.toJSON(),
+      createdAt: formatToKST(answer.createdAt),
+      updatedAt: formatToKST(answer.updatedAt),
+    };
+
     res.status(200).json({
       status: STATUS.SUCCESS,
       message: MESSAGES.ANSWER_FETCHED_DETAIL,
-      answer: answer.toJSON(),
+      answer: formattedAnswer,
     });
   } catch (error) {
     console.error("[ANSWER] 상세 조회 실패:", error);
@@ -174,10 +180,61 @@ const getAnswerDetailByAnswerId = async (req, res) => {
   }
 };
 
+const updateAnswer = async (req, res) => {
+  try {
+    const { answerId } = req.params;
+    const updateData = req.body;
+
+    // 1. 응답 존재 여부 먼저 확인
+    const answer = await answerService.getAnswerDetailByAnswerId(req.user._id, answerId);
+    if (!answer) {
+      return res.status(404).json({
+        status: STATUS.EMPTY,
+        error_code: ERROR_CODES.ANSWER_NOT_FOUND,
+        message: MESSAGES.ANSWER_NOT_FOUND,
+      });
+    }
+
+    // 2. 수정할 필드가 없는 경우 기존 응답 그대로 반환
+    if (Object.keys(updateData).length === 0) {
+      return res.status(200).json({
+        status: STATUS.SUCCESS,
+        message: MESSAGES.ANSWER_NO_UPDATE_FIELD,
+        answer: {
+          ...answer.toJSON(),
+          createdAt: formatToKST(answer.createdAt),
+          updatedAt: formatToKST(answer.updatedAt),
+        },
+      });
+    }
+
+    // 3. 실제 수정
+    const updatedAnswer = await answerService.updateAnswer(req.user._id, answerId, updateData);
+
+    return res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGES.ANSWER_UPDATED,
+      answer: {
+        ...updatedAnswer.toJSON(),
+        createdAt: formatToKST(updatedAnswer.createdAt),
+        updatedAt: formatToKST(updatedAnswer.updatedAt),
+      },
+    });
+  } catch (error) {
+    console.error("[ANSWER] 응답 수정 실패:", error);
+    return res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.ANSWER_UPDATE_FAILED,
+      message: MESSAGES.ANSWER_UPDATE_FAILED,
+    });
+  }
+};
+
 module.exports = {
   createAnswer,
   getAllAnswers,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
   getAnswerDetailByAnswerId,
+  updateAnswer,
 };

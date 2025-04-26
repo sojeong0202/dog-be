@@ -28,10 +28,15 @@ const getAnswerDetailByAnswerId = async (userId, answerId) => {
   return await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
 };
 
+const updateAnswer = async (userId, answerId, updateData) => {
+  return await answerRepository.updateAnswerByAnswerId(userId, answerId, updateData);
+};
+
 module.exports = {
   createAnswer,
   getAllAnswersByUser,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
   getAnswerDetailByAnswerId,
+  updateAnswer,
 };

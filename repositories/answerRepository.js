@@ -38,10 +38,19 @@ const findAnswerDetailByAnswerId = async (userId, answerId) => {
   });
 };
 
+const updateAnswerByAnswerId = async (userId, answerId, updateData) => {
+  return await Answer.findOneAndUpdate(
+    { _id: answerId, userId, isDeleted: false },
+    { $set: updateData },
+    { new: true }
+  );
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
   findAnswersByUserAndYearAndMonth,
   findAnswerSummaryByAnswerId,
   findAnswerDetailByAnswerId,
+  updateAnswerByAnswerId,
 };
