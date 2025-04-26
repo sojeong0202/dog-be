@@ -46,6 +46,14 @@ const updateAnswerByAnswerId = async (userId, answerId, updateData) => {
   );
 };
 
+const deleteAnswerByAnswerId = async (userId, answerId) => {
+  return await Answer.findOneAndUpdate(
+    { _id: answerId, userId, isDeleted: false },
+    { $set: { isDeleted: true } },
+    { new: true }
+  );
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
@@ -53,4 +61,5 @@ module.exports = {
   findAnswerSummaryByAnswerId,
   findAnswerDetailByAnswerId,
   updateAnswerByAnswerId,
+  deleteAnswerByAnswerId,
 };

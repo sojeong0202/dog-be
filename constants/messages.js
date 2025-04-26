@@ -59,6 +59,7 @@ module.exports = {
   ANSWER_FETCH_SUMMARY_FAILED: "응답 간단 조회 중 예기치 않은 오류 발생",
   ANSWER_FETCH_DETAIL_FAILED: "응답 상세 조회 중 예기치 않은 오류 발생",
   ANSWER_UPDATE_FAILED: "응답 수정 중 예기치 않은 오류 발생",
+  ANSWER_DELETE_FAILED: "응답 삭제 중 예기치 않은 오류 발생",
 
   // Auth
 

@@ -32,6 +32,10 @@ const updateAnswer = async (userId, answerId, updateData) => {
   return await answerRepository.updateAnswerByAnswerId(userId, answerId, updateData);
 };
 
+const deleteAnswer = async (userId, answerId) => {
+  return await answerRepository.deleteAnswerByAnswerId(userId, answerId);
+};
+
 module.exports = {
   createAnswer,
   getAllAnswersByUser,
@@ -39,4 +43,5 @@ module.exports = {
   getAnswerSummaryByAnswerId,
   getAnswerDetailByAnswerId,
   updateAnswer,
+  deleteAnswer,
 };

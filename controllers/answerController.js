@@ -230,6 +230,29 @@ const updateAnswer = async (req, res) => {
   }
 };
 
+const deleteAnswer = async (req, res) => {
+  try {
+    const deletedAnswer = await answerService.deleteAnswer(req.user._id, req.params.answerId);
+
+    if (!deletedAnswer) {
+      return res.status(404).json({
+        status: STATUS.EMPTY,
+        error_code: ERROR_CODES.ANSWER_NOT_FOUND,
+        message: MESSAGES.ANSWER_NOT_FOUND,
+      });
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("[ANSWER] 삭제 실패:", error);
+    res.status(500).json({
+      status: STATUS.ERROR,
+      error_code: ERROR_CODES.ANSWER_DELETE_FAILED,
+      message: MESSAGES.ANSWER_DELETE_FAILED,
+    });
+  }
+};
+
 module.exports = {
   createAnswer,
   getAllAnswers,
@@ -237,4 +260,5 @@ module.exports = {
   getAnswerSummaryByAnswerId,
   getAnswerDetailByAnswerId,
   updateAnswer,
+  deleteAnswer,
 };

@@ -13,5 +13,6 @@ router.get(
 );
 router.get("/:answerId/detail", isAuthenticated, answerController.getAnswerDetailByAnswerId);
 router.patch("/:answerId", isAuthenticated, answerController.updateAnswer);
+router.delete("/:answerId", isAuthenticated, answerController.deleteAnswer);
 
 module.exports = router;
