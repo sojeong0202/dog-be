@@ -30,9 +30,36 @@ module.exports = {
 
   // Question
 
-  QUESTION_PROVIDE_FAILED: "질문 제공 중 예기치 않은 오류 발생",
+  // 성공
   QUESTION_PROVIDED: "질문 제공 성공",
-  ALL_QUESTIONS_ANSWERED: "모든 질문에 답변했습니다!",
+  ALL_QUESTIONS_ANSWERED: "모든 질문에 답변했습니다",
+  // 500
+  QUESTION_PROVIDE_FAILED: "질문 제공 중 예기치 않은 오류 발생",
+
+  // Answer
+
+  // 성공
+  ANSWER_CREATED: "응답 저장 완료",
+  ANSWER_FETCHED_ALL: "응답 목록 조회 성공",
+  ANSWER_LIST_EMPTY: "응답 목록이 비어 있습니다.",
+  ANSWER_MONTHLY_FETCHED: "월별 응답 목록 조회 성공",
+  ANSWER_THIS_MONTH_LIST_EMPTY: "해당 월에는 응답이 없습니다.",
+  ANSWER_SUMMARY_FETCHED: "응답 간단 조회 성공",
+  ANSWER_FETCHED_DETAIL: "응답 상세 조회 성공",
+  ANSWER_UPDATED: "응답 수정 완료",
+  ANSWER_NO_UPDATE_FIELD: "수정할 필드가 없어 기존 응답을 반환합니다.",
+  // 400
+  ANSWER_VALIDATION_FAILED: "필수 입력값이 누락되었습니다.",
+  ANSWER_QUERY_VALIDATION_FAILED: "year 또는 month가 누락되었습니다.",
+  ANSWER_NOT_FOUND: "해당 응답을 찾을 수 없습니다.",
+  // 500
+  ANSWER_CREATE_FAILED: "응답 저장 중 예기치 않은 오류 발생",
+  ANSWER_FETCH_ALL_FAILED: "응답 조회 중 예기치 않은 오류 발생",
+  ANSWER_FETCH_MONTHLY_FAILED: "월별 응답 목록 조회 중 예기치 않은 오류 발생",
+  ANSWER_FETCH_SUMMARY_FAILED: "응답 간단 조회 중 예기치 않은 오류 발생",
+  ANSWER_FETCH_DETAIL_FAILED: "응답 상세 조회 중 예기치 않은 오류 발생",
+  ANSWER_UPDATE_FAILED: "응답 수정 중 예기치 않은 오류 발생",
+  ANSWER_DELETE_FAILED: "응답 삭제 중 예기치 않은 오류 발생",
 
   // Auth
 
@@ -42,5 +69,5 @@ module.exports = {
   AUTH_KAKAO_UNAUTHORIZED: "카카오 인증에 실패했습니다.",
   AUTH_UNAUTHORIZED: "인증되지 않은 사용자입니다.",
   // 500
-  AUTH_KAKAO_FAILED: "카카오 로그인 처리 중 예기치 않은 오류가 발생했습니다.",
+  AUTH_KAKAO_FAILED: "카카오 로그인 처리 중 예기치 않은 오류 발생",
 };
