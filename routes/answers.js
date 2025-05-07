@@ -3,7 +3,8 @@ const router = express.Router();
 const { isAuthenticated } = require("../middlewares/authMiddleware");
 const answerController = require("../controllers/answerController");
 
-router.post("/", isAuthenticated, answerController.createAnswer);
+router.get("/today", isAuthenticated, answerController.getTodayAnswer);
+router.post("/today", isAuthenticated, answerController.saveTodayAnswer);
 router.get("/", isAuthenticated, answerController.getAllAnswers);
 router.get("/calendar", isAuthenticated, answerController.getAnswersByYearAndMonth);
 router.get(

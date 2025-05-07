@@ -1,10 +1,5 @@
 const Answer = require("../models/Answer");
 
-const createAnswer = async (answerData) => {
-  const answer = new Answer(answerData);
-  return await answer.save();
-};
-
 const findAllAnswersByUserId = async (userId) => {
   return await Answer.find({ userId, isDeleted: false }).sort({ createdAt: -1 });
 };
@@ -54,6 +49,44 @@ const deleteAnswerByAnswerId = async (userId, answerId) => {
   );
 };
 
+const findTodayAnswer = async (userId, dateKey) => {
+  return await Answer.findOne({ userId, dateKey, isDeleted: false });
+};
+
+const createAnswer = async ({
+  userId,
+  questionId,
+  questionText,
+  answerText,
+  photos,
+  dateKey,
+  isDraft,
+}) => {
+  return await Answer.create({
+    userId,
+    questionId,
+    questionText,
+    answerText,
+    photos,
+    dateKey,
+    isDraft,
+  });
+};
+
+const upsertTodayAnswer = async ({ userId, dateKey, answerText, photos, isDraft }) => {
+  return await Answer.findOneAndUpdate(
+    { userId, dateKey },
+    {
+      $set: {
+        answerText,
+        photos,
+        isDraft,
+      },
+    },
+    { new: true }
+  );
+};
+
 module.exports = {
   createAnswer,
   findAllAnswersByUserId,
@@ -62,4 +95,6 @@ module.exports = {
   findAnswerDetailByAnswerId,
   updateAnswerByAnswerId,
   deleteAnswerByAnswerId,
+  findTodayAnswer,
+  upsertTodayAnswer,
 };

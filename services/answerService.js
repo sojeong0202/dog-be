@@ -1,15 +1,45 @@
 const answerRepository = require("../repositories/answerRepository");
+const questionRepository = require("../repositories/questionRepository");
 
-const createAnswer = async (userId, answerData) => {
-  const newAnswer = {
+const todayKey = require("../utils/todayKey");
+
+const getOrCreateTodayAnswer = async (userId) => {
+  const dateKey = todayKey();
+  let answer = await answerRepository.findTodayAnswer(userId, dateKey);
+
+  if (answer) return answer;
+
+  const question = await questionRepository.getRandomUnansweredQuestion(userId);
+  if (!question) throw new Error("NO_QUESTION_LEFT");
+
+  return await answerRepository.createAnswer({
     userId,
-    questionId: answerData.questionId,
-    questionText: answerData.questionText,
-    answerText: answerData.answerText,
-    photos: answerData.photos || [],
-  };
+    questionId: question._id,
+    questionText: question.text,
+    answerText: "",
+    photos: [],
+    dateKey,
+    isDraft: true,
+  });
+};
 
-  return await answerRepository.createAnswer(newAnswer);
+const saveTodayAnswer = async (userId, answerText = "", photos = []) => {
+  const dateKey = todayKey();
+  const isDraft = !answerText.trim();
+
+  const answer = await answerRepository.findTodayAnswer(userId, dateKey);
+
+  if (!answer) {
+    throw new Error("ANSWER_NOT_FOUND_FOR_SAVE");
+  }
+
+  return await answerRepository.upsertTodayAnswer({
+    userId,
+    dateKey,
+    answerText,
+    photos,
+    isDraft,
+  });
 };
 
 const getAllAnswersByUser = async (userId) => {
@@ -37,7 +67,8 @@ const deleteAnswer = async (userId, answerId) => {
 };
 
 module.exports = {
-  createAnswer,
+  getOrCreateTodayAnswer,
+  saveTodayAnswer,
   getAllAnswersByUser,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
