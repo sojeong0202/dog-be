@@ -5,8 +5,15 @@ const answerSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question", required: true },
     questionText: { type: String, required: true },
-    answerText: { type: String, required: true },
+    answerText: {
+      type: String,
+      required: function () {
+        return !this.isDraft; // isDraft가 false일 때만 필수
+      },
+    },
     photos: [{ type: String }],
+    isDraft: { type: Boolean, default: true },
+    dateKey: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -21,5 +28,7 @@ const answerSchema = new mongoose.Schema(
     },
   }
 );
+
+answerSchema.index({ userId: 1, dateKey: 1 }, { unique: true });
 
 module.exports = mongoose.model("Answer", answerSchema);

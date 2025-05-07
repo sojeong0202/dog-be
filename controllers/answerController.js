@@ -4,19 +4,42 @@ const STATUS = require("../constants/statusCodes");
 const ERROR_CODES = require("../constants/errorCodes");
 const MESSAGES = require("../constants/messages");
 
-const createAnswer = async (req, res) => {
+const getTodayAnswer = async (req, res) => {
   try {
-    const { questionId, questionText, answerText } = req.body;
+    const answer = await answerService.getOrCreateTodayAnswer(req.user._id);
 
-    if (!questionId || !questionText || !answerText) {
-      return res.status(400).json({
-        status: STATUS.ERROR,
-        error_code: ERROR_CODES.ANSWER_VALIDATION_FAILED,
-        message: MESSAGES.ANSWER_VALIDATION_FAILED,
-      });
-    }
+    res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGES.ANSWER_FETCHED_TODAY,
+      question: {
+        id: answer.questionId,
+        text: answer.questionText,
+      },
+      answer: {
+        id: answer.id,
+        answerText: answer.answerText,
+        photos: answer.photos,
+        isDraft: answer.isDraft,
+      },
+    });
+  } catch (error) {
+    console.error("[ANSWER] 오늘 질문/응답 조회 실패:", error);
+    const isNoQuestion = error.message === "NO_QUESTION_LEFT";
+    return res.status(isNoQuestion ? 404 : 500).json({
+      status: STATUS.ERROR,
+      error_code: isNoQuestion
+        ? ERROR_CODES.QUESTION_PROVIDE_FAILED
+        : ERROR_CODES.ANSWER_FETCH_TODAY_FAILED,
+      message: isNoQuestion ? MESSAGES.ALL_QUESTIONS_ANSWERED : MESSAGES.ANSWER_FETCH_TODAY_FAILED,
+    });
+  }
+};
 
-    const answer = await answerService.createAnswer(req.user._id, req.body);
+const saveTodayAnswer = async (req, res) => {
+  try {
+    const { answerText = "", photos = [] } = req.body;
+
+    const answer = await answerService.saveTodayAnswer(req.user._id, answerText, photos);
 
     res.status(201).json({
       status: STATUS.SUCCESS,
@@ -24,11 +47,12 @@ const createAnswer = async (req, res) => {
       answer: answer.toJSON(),
     });
   } catch (error) {
-    console.error("[ANSWER] 응답 저장 실패:", error);
-    res.status(500).json({
+    console.error("[ANSWER] 오늘 응답 저장 실패:", error);
+    const isNotFound = error.message === "ANSWER_NOT_FOUND_FOR_SAVE";
+    return res.status(isNotFound ? 404 : 500).json({
       status: STATUS.ERROR,
-      error_code: ERROR_CODES.ANSWER_CREATE_FAILED,
-      message: MESSAGES.ANSWER_CREATE_FAILED,
+      error_code: isNotFound ? ERROR_CODES.ANSWER_NOT_FOUND : ERROR_CODES.ANSWER_DRAFT_SAVE_FAILED,
+      message: isNotFound ? MESSAGES.ANSWER_NOT_FOUND : MESSAGES.ANSWER_DRAFT_SAVE_FAILED,
     });
   }
 };
@@ -254,7 +278,8 @@ const deleteAnswer = async (req, res) => {
 };
 
 module.exports = {
-  createAnswer,
+  getTodayAnswer,
+  saveTodayAnswer,
   getAllAnswers,
   getAnswersByYearAndMonth,
   getAnswerSummaryByAnswerId,
