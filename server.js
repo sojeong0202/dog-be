@@ -10,6 +10,7 @@ const dogRouter = require("./routes/dogs");
 const userRouter = require("./routes/users");
 const questionRouter = require("./routes/questions");
 const answerRouter = require("./routes/answers");
+const photoRouter = require("./routes/photos");
 
 const { handleAuthError } = require("./middlewares/errorHandler");
 
@@ -35,6 +36,7 @@ app.use("/dogs", dogRouter);
 app.use("/users/me", userRouter);
 app.use("/questions", questionRouter);
 app.use("/answers", answerRouter);
+app.use("/photos", photoRouter);
 
 app.use(handleAuthError);
 
