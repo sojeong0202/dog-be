@@ -6,7 +6,7 @@ const dogSchema = new mongoose.Schema(
     name: { type: String, required: true },
     birthday: { type: Date, required: true },
     firstMetAt: { type: Date, required: true }, // 처음 만난 날
-    photo: { type: String },
+    profilePhotoId: { type: mongoose.Schema.Types.ObjectId, ref: "ProfilePhoto" },
   },
   {
     versionKey: false,

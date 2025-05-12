@@ -15,12 +15,12 @@ const uploadProfilePhoto = async (req, res) => {
       });
     }
 
-    const parUrl = await profilePhotoService.uploadProfilePhoto(req.file, req.user._id);
+    const profilePhotoId = await profilePhotoService.uploadProfilePhoto(req.file, req.user._id);
 
     return res.status(201).json({
       status: STATUS.SUCCESS,
       message: MESSAGES.PHOTO_PROFILE_UPLOADED,
-      parUrl,
+      profilePhotoId: profilePhotoId,
     });
   } catch (error) {
     console.error("[PHOTO] 프로필 사진 업로드 실패:", error);

@@ -2,10 +2,14 @@ const mongoose = require("mongoose");
 
 const profilePhotoSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    objectName: { type: String, required: true },
+    objectName: { type: String },
     uri: { type: String, required: true },
-    parExpiresAt: { type: Date, required: true },
+    parExpiresAt: { type: Date },
+    source: {
+      type: String,
+      enum: ["kakao", "internal"],
+      default: "internal",
+    },
   },
   {
     versionKey: false,

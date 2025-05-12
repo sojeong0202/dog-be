@@ -5,8 +5,7 @@ const userSchema = new mongoose.Schema(
     kakaoId: { type: String, required: true, unique: true }, // 카카오 고유 ID
     email: { type: String },
     nickName: { type: String, required: true },
-    profileImage: { type: String },
-    createdAt: { type: Date, default: Date.now },
+    profilePhotoId: { type: mongoose.Schema.Types.ObjectId, ref: "ProfilePhoto" },
   },
   {
     timestamps: true,
