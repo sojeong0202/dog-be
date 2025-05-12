@@ -40,7 +40,7 @@ const createParUrl = async (objectName) => {
   };
 };
 
-const uploadProfilePhoto = async (file, userId) => {
+const uploadProfilePhoto = async (file) => {
   const uniqueName = uuidv4() + path.extname(file.originalname);
   const objectName = `${PROFILE_PREFIX}${uniqueName}`;
 
@@ -55,32 +55,28 @@ const uploadProfilePhoto = async (file, userId) => {
 
   deleteLocalFile(file.path);
 
-  // 기존 이미지 삭제
-  await profilePhotoRepository.deleteAllProfilePhotosByUserId(userId);
-
-  // 새 PAR 발급 및 도큐먼트 생성
   const { parUrl, expiresAt } = await createParUrl(objectName);
 
-  await profilePhotoRepository.createProfilePhoto({
-    userId,
+  const photo = await profilePhotoRepository.createInternalProfilePhoto({
     objectName,
-    uri: `https://objectstorage.ap-chuncheon-1.oraclecloud.com/n/${NAMESPACE}/b/${BUCKET_NAME}/o/${encodeURIComponent(
-      objectName
-    )}`,
+    uri: parUrl,
     parExpiresAt: expiresAt,
   });
 
-  return parUrl;
+  return photo._id;
 };
 
-const getValidProfileParUrl = async (userId) => {
-  const photo = await profilePhotoRepository.findLatestProfilePhotoByUserId(userId);
+const getValidProfileParUrl = async (photoId) => {
+  const photo = await profilePhotoRepository.findPhotoById(photoId);
   if (!photo) return null;
 
+  if (photo.source === "kakao") return photo.uri;
+
   const isExpired = new Date() > photo.parExpiresAt;
-  if (!isExpired) return photo.parUrl;
+  if (!isExpired) return photo.uri;
 
   const { parUrl, expiresAt } = await createParUrl(photo.objectName);
+  photo.uri = parUrl;
   photo.parExpiresAt = expiresAt;
   await photo.save();
 
