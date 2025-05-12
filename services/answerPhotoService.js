@@ -40,7 +40,7 @@ const createParUrl = async (objectName) => {
   };
 };
 
-const uploadAnswerPhoto = async (file, answerId) => {
+const uploadAnswerPhoto = async (file) => {
   const uniqueName = uuidv4() + path.extname(file.originalname);
   const objectName = `${ANSWER_PREFIX}${uniqueName}`;
 
@@ -58,21 +58,18 @@ const uploadAnswerPhoto = async (file, answerId) => {
   const { parUrl, expiresAt } = await createParUrl(objectName);
 
   const photoDoc = await answerPhotoRepository.createAnswerPhoto({
-    answerId,
     objectName,
-    uri: `https://objectstorage.ap-chuncheon-1.oraclecloud.com/n/${NAMESPACE}/b/${BUCKET_NAME}/o/${encodeURIComponent(
-      objectName
-    )}`,
+    uri: parUrl,
     parExpiresAt: expiresAt,
   });
 
   return { id: photoDoc.id, parUrl };
 };
 
-const uploadAnswerPhotos = async (files, answerId) => {
+const uploadAnswerPhotos = async (files) => {
   const results = [];
   for (const file of files) {
-    const photo = await uploadAnswerPhoto(file, answerId);
+    const photo = await uploadAnswerPhoto(file);
     results.push(photo);
   }
   return results;
@@ -83,9 +80,10 @@ const getValidAnswerParUrl = async (photoId) => {
   if (!photo) return null;
 
   const isExpired = new Date() > photo.parExpiresAt;
-  if (!isExpired) return photo.parUrl;
+  if (!isExpired) return photo.uri;
 
   const { parUrl, expiresAt } = await createParUrl(photo.objectName);
+  photo.uri = parUrl;
   photo.parExpiresAt = expiresAt;
   await photo.save();
 

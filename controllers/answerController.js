@@ -18,7 +18,7 @@ const getTodayAnswer = async (req, res) => {
       answer: {
         id: answer.id,
         answerText: answer.answerText,
-        photos: answer.photos,
+        photoUrls: answer.photoUrls || [],
         isDraft: answer.isDraft,
       },
     });
@@ -37,9 +37,9 @@ const getTodayAnswer = async (req, res) => {
 
 const saveTodayAnswer = async (req, res) => {
   try {
-    const { answerText = "", photos = [] } = req.body;
+    const { answerText = "", photoIds = [] } = req.body;
 
-    const answer = await answerService.saveTodayAnswer(req.user._id, answerText, photos);
+    const answer = await answerService.saveTodayAnswer(req.user._id, answerText, photoIds);
 
     res.status(201).json({
       status: STATUS.SUCCESS,
@@ -183,16 +183,14 @@ const getAnswerDetailByAnswerId = async (req, res) => {
       });
     }
 
-    const formattedAnswer = {
-      ...answer.toJSON(),
-      createdAt: formatToKST(answer.createdAt),
-      updatedAt: formatToKST(answer.updatedAt),
-    };
-
     res.status(200).json({
       status: STATUS.SUCCESS,
       message: MESSAGES.ANSWER_FETCHED_DETAIL,
-      answer: formattedAnswer,
+      answer: {
+        ...answer,
+        createdAt: formatToKST(answer.createdAt),
+        updatedAt: formatToKST(answer.updatedAt),
+      },
     });
   } catch (error) {
     console.error("[ANSWER] 상세 조회 실패:", error);
@@ -225,7 +223,7 @@ const updateAnswer = async (req, res) => {
         status: STATUS.SUCCESS,
         message: MESSAGES.ANSWER_NO_UPDATE_FIELD,
         answer: {
-          ...answer.toJSON(),
+          ...answer,
           createdAt: formatToKST(answer.createdAt),
           updatedAt: formatToKST(answer.updatedAt),
         },

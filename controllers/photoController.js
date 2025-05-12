@@ -43,8 +43,7 @@ const uploadAnswerPhotos = async (req, res) => {
       });
     }
 
-    const { answerId } = req.body;
-    const result = await answerPhotoService.uploadAnswerPhotos(req.files, answerId);
+    const result = await answerPhotoService.uploadAnswerPhotos(req.files);
 
     return res.status(201).json({
       status: STATUS.SUCCESS,

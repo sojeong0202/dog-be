@@ -1,34 +1,35 @@
 const answerRepository = require("../repositories/answerRepository");
 const questionRepository = require("../repositories/questionRepository");
-
+const answerPhotoService = require("../services/answerPhotoService");
 const todayKey = require("../utils/todayKey");
 
 const getOrCreateTodayAnswer = async (userId) => {
   const dateKey = todayKey();
-  let answer = await answerRepository.findTodayAnswer(userId, dateKey);
+  let answer = await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
 
   if (answer) return answer;
 
   const question = await questionRepository.getRandomUnansweredQuestion(userId);
   if (!question) throw new Error("NO_QUESTION_LEFT");
 
-  return await answerRepository.createAnswer({
+  await answerRepository.createAnswer({
     userId,
     questionId: question._id,
     questionText: question.text,
     answerText: "",
-    photos: [],
+    photoIds: [],
     dateKey,
     isDraft: true,
   });
+
+  return await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
 };
 
-const saveTodayAnswer = async (userId, answerText = "", photos = []) => {
+const saveTodayAnswer = async (userId, answerText = "", photoIds = []) => {
   const dateKey = todayKey();
   const isDraft = !answerText.trim();
 
   const answer = await answerRepository.findTodayAnswer(userId, dateKey);
-
   if (!answer) {
     throw new Error("ANSWER_NOT_FOUND_FOR_SAVE");
   }
@@ -37,7 +38,7 @@ const saveTodayAnswer = async (userId, answerText = "", photos = []) => {
     userId,
     dateKey,
     answerText,
-    photos,
+    photoIds,
     isDraft,
   });
 };
@@ -55,7 +56,16 @@ const getAnswerSummaryByAnswerId = async (userId, answerId) => {
 };
 
 const getAnswerDetailByAnswerId = async (userId, answerId) => {
-  return await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
+  const answer = await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
+  if (!answer) return null;
+
+  const answerObj = answer.toJSON();
+  answerObj.photoUrls = await Promise.all(
+    answer.photoIds.map((photoDoc) => answerPhotoService.getValidAnswerParUrl(photoDoc._id))
+  );
+  delete answerObj.photoIds;
+
+  return answerObj;
 };
 
 const updateAnswer = async (userId, answerId, updateData) => {

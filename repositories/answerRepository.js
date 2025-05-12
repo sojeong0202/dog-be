@@ -30,7 +30,7 @@ const findAnswerDetailByAnswerId = async (userId, answerId) => {
     _id: answerId,
     userId,
     isDeleted: false,
-  });
+  }).populate("photoIds");
 };
 
 const updateAnswerByAnswerId = async (userId, answerId, updateData) => {
@@ -38,7 +38,7 @@ const updateAnswerByAnswerId = async (userId, answerId, updateData) => {
     { _id: answerId, userId, isDeleted: false },
     { $set: updateData },
     { new: true }
-  );
+  ).populate("photoIds");
 };
 
 const deleteAnswerByAnswerId = async (userId, answerId) => {
@@ -50,7 +50,7 @@ const deleteAnswerByAnswerId = async (userId, answerId) => {
 };
 
 const findTodayAnswer = async (userId, dateKey) => {
-  return await Answer.findOne({ userId, dateKey, isDeleted: false });
+  return await Answer.findOne({ userId, dateKey, isDeleted: false }).populate("photoIds");
 };
 
 const createAnswer = async ({
@@ -58,7 +58,7 @@ const createAnswer = async ({
   questionId,
   questionText,
   answerText,
-  photos,
+  photoIds,
   dateKey,
   isDraft,
 }) => {
@@ -67,24 +67,34 @@ const createAnswer = async ({
     questionId,
     questionText,
     answerText,
-    photos,
+    photoIds,
     dateKey,
     isDraft,
   });
 };
 
-const upsertTodayAnswer = async ({ userId, dateKey, answerText, photos, isDraft }) => {
+const upsertTodayAnswer = async ({ userId, dateKey, answerText, photoIds, isDraft }) => {
   return await Answer.findOneAndUpdate(
     { userId, dateKey },
     {
       $set: {
         answerText,
-        photos,
+        photoIds,
         isDraft,
       },
     },
     { new: true }
   );
+};
+
+const findTodayAnswerWithPhotoUrls = async (userId, dateKey) => {
+  const answer = await Answer.findOne({ userId, dateKey, isDeleted: false }).populate("photoIds");
+
+  if (!answer) return null;
+
+  const plain = answer.toJSON();
+  plain.photoUrls = answer.photoIds.map((photo) => photo.uri);
+  return plain;
 };
 
 module.exports = {
@@ -97,4 +107,5 @@ module.exports = {
   deleteAnswerByAnswerId,
   findTodayAnswer,
   upsertTodayAnswer,
+  findTodayAnswerWithPhotoUrls,
 };
