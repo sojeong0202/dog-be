@@ -1,4 +1,5 @@
 const dogService = require("../services/dogService");
+const profilePhotoService = require("../services/profilePhotoService");
 const formatToKST = require("../utils/formatDate");
 const STATUS = require("../constants/statusCodes");
 const ERROR_CODES = require("../constants/errorCodes");
@@ -51,15 +52,15 @@ const getMyDogSummary = async (req, res) => {
       });
     }
 
-    const { _id, name, photo, togetherFor } = dog;
+    const { id, name, profilePhotoUrl, togetherFor } = dog;
 
     res.status(200).json({
       status: STATUS.SUCCESS,
       message: MESSAGES.DOG_FETCHED,
       dog: {
-        id: _id,
+        id,
         name,
-        photo,
+        profilePhotoUrl,
         togetherFor,
       },
     });
@@ -85,10 +86,15 @@ const getMyDogDetail = async (req, res) => {
       });
     }
 
+    const dogObj = dog.toJSON();
+    dogObj.profilePhotoUrl = await profilePhotoService.getValidProfileParUrl(
+      dog.profilePhotoId?._id
+    );
+
     const formattedDog = {
-      ...dog.toJSON(),
-      birthday: formatToKST(dog.birthday),
-      firstMetAt: formatToKST(dog.firstMetAt),
+      ...dogObj,
+      birthday: formatToKST(dogObj.birthday),
+      firstMetAt: formatToKST(dogObj.firstMetAt),
     };
 
     res.status(200).json({

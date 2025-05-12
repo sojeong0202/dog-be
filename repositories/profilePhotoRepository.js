@@ -1,22 +1,27 @@
 const ProfilePhoto = require("../models/ProfilePhoto");
 
-// 프로필 사진 생성
-const createProfilePhoto = async ({ userId, objectName, uri, parExpiresAt }) => {
-  return await ProfilePhoto.create({ userId, objectName, uri, parExpiresAt });
+const createKakaoProfilePhoto = async (kakaoProfileUrl) => {
+  return await ProfilePhoto.create({
+    uri: kakaoProfileUrl,
+    source: "kakao",
+  });
 };
 
-// 사용자 ID로 최신 프로필 사진 조회
-const findLatestProfilePhotoByUserId = async (userId) => {
-  return await ProfilePhoto.findOne({ userId }).sort({ createdAt: -1 });
+const createInternalProfilePhoto = async ({ objectName, uri, parExpiresAt }) => {
+  return await ProfilePhoto.create({
+    objectName,
+    uri,
+    parExpiresAt,
+    source: "internal",
+  });
 };
 
-// 사용자 ID로 모든 프로필 사진 삭제 (교체 시)
-const deleteAllProfilePhotosByUserId = async (userId) => {
-  return await ProfilePhoto.deleteMany({ userId });
+const findPhotoById = async (photoId) => {
+  return await ProfilePhoto.findById(photoId);
 };
 
 module.exports = {
-  createProfilePhoto,
-  findLatestProfilePhotoByUserId,
-  deleteAllProfilePhotosByUserId,
+  createKakaoProfilePhoto,
+  createInternalProfilePhoto,
+  findPhotoById,
 };

@@ -5,7 +5,7 @@ const MESSAGES = require("../constants/messages");
 
 const getUserSummary = async (req, res) => {
   try {
-    const user = req.user; // passport-jwt로 인증된 사용자
+    const user = await userService.getUserWithProfilePhoto(req.user._id);
 
     res.status(200).json({
       status: STATUS.SUCCESS,
@@ -13,7 +13,7 @@ const getUserSummary = async (req, res) => {
       user: {
         id: user._id,
         nickName: user.nickName,
-        profileImage: user.profileImage,
+        profilePhotoUrl: user.profilePhotoUrl,
       },
     });
   } catch (error) {
@@ -28,7 +28,7 @@ const getUserSummary = async (req, res) => {
 
 const getUserDetail = async (req, res) => {
   try {
-    const user = req.user;
+    const user = await userService.getUserWithProfilePhoto(req.user._id);
 
     res.status(200).json({
       status: STATUS.SUCCESS,
@@ -37,7 +37,7 @@ const getUserDetail = async (req, res) => {
         id: user._id,
         email: user.email,
         nickName: user.nickName,
-        profileImage: user.profileImage,
+        profilePhotoUrl: user.profilePhotoUrl,
       },
     });
   } catch (error) {
@@ -62,14 +62,16 @@ const updateUser = async (req, res) => {
       });
     }
 
+    const userWithPhoto = await userService.getUserWithProfilePhoto(updatedUser._id);
+
     res.status(200).json({
       status: STATUS.SUCCESS,
       message: MESSAGES.USER_UPDATED,
       user: {
-        id: updatedUser._id,
-        email: updatedUser.email,
-        nickName: updatedUser.nickName,
-        profileImage: updatedUser.profileImage,
+        id: userWithPhoto._id,
+        email: userWithPhoto.email,
+        nickName: userWithPhoto.nickName,
+        profilePhotoUrl: userWithPhoto.profilePhotoUrl,
       },
     });
   } catch (error) {

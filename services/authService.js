@@ -1,5 +1,6 @@
 const axios = require("axios");
 const userRepository = require("../repositories/userRepository");
+const profilePhotoRepository = require("../repositories/profilePhotoRepository");
 const { createToken } = require("../utils/jwt");
 
 const loginWithKakao = async (code) => {
@@ -25,17 +26,23 @@ const loginWithKakao = async (code) => {
   const { id, kakao_account, properties } = kakaoUser.data;
   const email = kakao_account.email;
   const nickName = properties.nickname;
-  const profileImage = properties.profile_image;
+  const kakaoProfileImageUrl = properties.profile_image;
 
   // 사용자 조회/생성
   let user = await userRepository.findByKakaoId(id);
   if (!user) {
-    user = await userRepository.createUser({ kakaoId: id, email, nickName, profileImage });
+    const profilePhoto = await profilePhotoRepository.createKakaoProfilePhoto(kakaoProfileImageUrl);
+
+    user = await userRepository.createUser({
+      kakaoId: id,
+      email,
+      nickName,
+      profilePhotoId: profilePhoto._id,
+    });
   }
 
   // JWT 발급
   const token = createToken({ userId: user._id });
-
   return token;
 };
 
