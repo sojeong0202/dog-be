@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const answerPhotoSchema = new mongoose.Schema(
   {
-    answerId: { type: mongoose.Schema.Types.ObjectId, ref: "Answer", required: true },
     objectName: { type: String, required: true },
     uri: { type: String, required: true },
     parExpiresAt: { type: Date, required: true },

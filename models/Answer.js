@@ -11,7 +11,7 @@ const answerSchema = new mongoose.Schema(
         return !this.isDraft; // isDraft가 false일 때만 필수
       },
     },
-    photos: [{ type: String }],
+    photoIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "AnswerPhoto" }],
     isDraft: { type: Boolean, default: true },
     dateKey: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
