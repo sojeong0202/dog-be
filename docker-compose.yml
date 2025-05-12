@@ -10,6 +10,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ~/.oci:/root/.oci:ro
+      - /home/ubuntu/.oci:/root/.oci:ro
     environment:
       - TZ=Asia/Seoul
