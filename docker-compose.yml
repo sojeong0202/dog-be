@@ -3,7 +3,7 @@ services:
   app:
     build: .
     ports:
-      - "80:8443"
+      - "443:8443"
     env_file:
       - .env
     restart: always

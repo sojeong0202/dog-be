@@ -3,6 +3,8 @@ const express = require("express");
 const connectDB = require("./database.js");
 const passport = require("passport");
 const cors = require("cors");
+const https = require("https");
+const fs = require("fs");
 
 const jwtStrategy = require("./passport/jwtStrategy");
 const authRouter = require("./routes/auth");
@@ -40,6 +42,11 @@ app.use("/photos", photoRouter);
 
 app.use(handleAuthError);
 
-app.listen(process.env.PORT, () => {
-  console.log(`${process.env.PORT} 포트에서 서버 실행 중`);
+const credentials = {
+  key: fs.readFileSync(process.env.HTTPS_KEY_PATH),
+  cert: fs.readFileSync(process.env.HTTPS_CERT_PATH),
+};
+
+https.createServer(credentials, app).listen(process.env.PORT, () => {
+  console.log(`HTTPS 서버가 ${process.env.PORT} 포트에서 실행 중입니다.`);
 });
