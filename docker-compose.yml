@@ -11,5 +11,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - /home/ubuntu/.oci:/root/.oci:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - TZ=Asia/Seoul
