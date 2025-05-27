@@ -56,6 +56,7 @@ module.exports = {
   ANSWER_VALIDATION_FAILED: "필수 입력값이 누락되었습니다.",
   ANSWER_QUERY_VALIDATION_FAILED: "year 또는 month가 누락되었습니다.",
   ANSWER_NOT_FOUND: "해당 응답을 찾을 수 없습니다.",
+  ANSWER_MOOD_VALIDATION_FAILED: "기분 상태(mood) 값이 올바르지 않습니다.",
   // 500
   ANSWER_CREATE_FAILED: "응답 저장 중 예기치 않은 오류 발생",
   ANSWER_FETCH_ALL_FAILED: "응답 조회 중 예기치 않은 오류 발생",

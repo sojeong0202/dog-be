@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { MOODS } = require("../constants/moodEnums");
 
 const answerSchema = new mongoose.Schema(
   {
@@ -15,6 +16,12 @@ const answerSchema = new mongoose.Schema(
     isDraft: { type: Boolean, default: true },
     dateKey: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
+    mood: {
+      type: String,
+      enum: MOODS,
+      default: null,
+      required: false,
+    },
   },
   {
     timestamps: true,

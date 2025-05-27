@@ -46,7 +46,7 @@ const updateAnswerByAnswerId = async (userId, answerId, updateData) => {
   return await Answer.findOneAndUpdate(
     { _id: answerId, userId, isDeleted: false },
     { $set: updateData },
-    { new: true }
+    { new: true, runValidators: true }
   ).populate("photoIds");
 };
 
@@ -70,6 +70,7 @@ const createAnswer = async ({
   photoIds,
   dateKey,
   isDraft,
+  mood,
 }) => {
   return await Answer.create({
     userId,
@@ -79,20 +80,22 @@ const createAnswer = async ({
     photoIds,
     dateKey,
     isDraft,
+    mood,
   });
 };
 
-const upsertTodayAnswer = async ({ userId, dateKey, answerText, photoIds, isDraft }) => {
+const upsertTodayAnswer = async ({ userId, dateKey, answerText, photoIds, isDraft, mood }) => {
+  const updateFields = {
+    answerText,
+    photoIds,
+    isDraft,
+  };
+  if (mood !== undefined) updateFields.mood = mood;
+
   return await Answer.findOneAndUpdate(
     { userId, dateKey },
-    {
-      $set: {
-        answerText,
-        photoIds,
-        isDraft,
-      },
-    },
-    { new: true }
+    { $set: updateFields },
+    { new: true, runValidators: true }
   );
 };
 

@@ -7,25 +7,30 @@ const getOrCreateTodayAnswer = async (userId) => {
   const dateKey = todayKey();
   let answer = await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
 
-  if (answer) return answer;
+  if (!answer) {
+    const question = await questionRepository.getRandomUnansweredQuestion(userId);
+    if (!question) throw new Error("NO_QUESTION_LEFT");
 
-  const question = await questionRepository.getRandomUnansweredQuestion(userId);
-  if (!question) throw new Error("NO_QUESTION_LEFT");
+    await answerRepository.createAnswer({
+      userId,
+      questionId: question._id,
+      questionText: question.text,
+      answerText: "",
+      photoIds: [],
+      dateKey,
+      isDraft: true,
+      mood: null,
+    });
 
-  await answerRepository.createAnswer({
-    userId,
-    questionId: question._id,
-    questionText: question.text,
-    answerText: "",
-    photoIds: [],
-    dateKey,
-    isDraft: true,
-  });
+    answer = await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
+  }
 
-  return await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
+  answer.order = await getAnswerOrderForToday(userId, dateKey);
+
+  return answer;
 };
 
-const saveTodayAnswer = async (userId, answerText = "", photoIds = []) => {
+const saveTodayAnswer = async (userId, answerText = "", photoIds = [], mood = undefined) => {
   const dateKey = todayKey();
   const isDraft = !answerText.trim();
 
@@ -40,6 +45,7 @@ const saveTodayAnswer = async (userId, answerText = "", photoIds = []) => {
     answerText,
     photoIds,
     isDraft,
+    mood,
   });
 };
 
