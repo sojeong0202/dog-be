@@ -55,6 +55,11 @@ const getAnswerSummaryByAnswerId = async (userId, answerId) => {
   return await answerRepository.findAnswerSummaryByAnswerId(userId, answerId);
 };
 
+const getAnswerOrderForToday = async (userId, dateKey) => {
+  const count = await answerRepository.countSubmittedAnswersExcludingDate(userId, dateKey);
+  return count + 1;
+};
+
 const getAnswerDetailByAnswerId = async (userId, answerId) => {
   const answer = await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
   if (!answer) return null;
@@ -64,6 +69,8 @@ const getAnswerDetailByAnswerId = async (userId, answerId) => {
     answer.photoIds.map((photoDoc) => answerPhotoService.getValidAnswerParUrl(photoDoc._id))
   );
   delete answerObj.photoIds;
+
+  answerObj.order = await getAnswerOrderForToday(userId, answer.dateKey);
 
   return answerObj;
 };

@@ -25,6 +25,15 @@ const findAnswerSummaryByAnswerId = async (userId, answerId) => {
   );
 };
 
+const countSubmittedAnswersExcludingDate = async (userId, dateKey) => {
+  return await Answer.countDocuments({
+    userId,
+    isDraft: false,
+    isDeleted: false,
+    dateKey: { $ne: dateKey },
+  });
+};
+
 const findAnswerDetailByAnswerId = async (userId, answerId) => {
   return await Answer.findOne({
     _id: answerId,
@@ -102,6 +111,7 @@ module.exports = {
   findAllAnswersByUserId,
   findAnswersByUserAndYearAndMonth,
   findAnswerSummaryByAnswerId,
+  countSubmittedAnswersExcludingDate,
   findAnswerDetailByAnswerId,
   updateAnswerByAnswerId,
   deleteAnswerByAnswerId,
