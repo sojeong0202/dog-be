@@ -20,6 +20,8 @@ const getTodayAnswer = async (req, res) => {
         answerText: answer.answerText,
         photoUrls: answer.photoUrls || [],
         isDraft: answer.isDraft,
+        mood: answer.mood,
+        order: answer.order,
       },
     });
   } catch (error) {
@@ -37,9 +39,9 @@ const getTodayAnswer = async (req, res) => {
 
 const saveTodayAnswer = async (req, res) => {
   try {
-    const { answerText = "", photoIds = [] } = req.body;
+    const { answerText = "", photoIds = [], mood } = req.body;
 
-    const answer = await answerService.saveTodayAnswer(req.user._id, answerText, photoIds);
+    const answer = await answerService.saveTodayAnswer(req.user._id, answerText, photoIds, mood);
 
     res.status(201).json({
       status: STATUS.SUCCESS,
@@ -48,6 +50,15 @@ const saveTodayAnswer = async (req, res) => {
     });
   } catch (error) {
     console.error("[ANSWER] 오늘 응답 저장 실패:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        status: STATUS.ERROR,
+        error_code: ERROR_CODES.ANSWER_VALIDATION_FAILED,
+        message: MESSAGES.ANSWER_MOOD_VALIDATION_FAILED,
+      });
+    }
+
     const isNotFound = error.message === "ANSWER_NOT_FOUND_FOR_SAVE";
     return res.status(isNotFound ? 404 : 500).json({
       status: STATUS.ERROR,
@@ -189,6 +200,7 @@ const getAnswerDetailByAnswerId = async (req, res) => {
       answer: {
         ...answer,
         order: answer.order,
+        mood: answer.mood,
         createdAt: formatToKST(answer.createdAt),
         updatedAt: formatToKST(answer.updatedAt),
       },
@@ -245,6 +257,15 @@ const updateAnswer = async (req, res) => {
     });
   } catch (error) {
     console.error("[ANSWER] 응답 수정 실패:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        status: STATUS.ERROR,
+        error_code: ERROR_CODES.ANSWER_VALIDATION_FAILED,
+        message: MESSAGES.ANSWER_MOOD_VALIDATION_FAILED,
+      });
+    }
+
     return res.status(500).json({
       status: STATUS.ERROR,
       error_code: ERROR_CODES.ANSWER_UPDATE_FAILED,
