@@ -188,6 +188,7 @@ const getAnswerDetailByAnswerId = async (req, res) => {
       message: MESSAGES.ANSWER_FETCHED_DETAIL,
       answer: {
         ...answer,
+        order: answer.order,
         createdAt: formatToKST(answer.createdAt),
         updatedAt: formatToKST(answer.updatedAt),
       },
