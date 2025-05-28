@@ -3,6 +3,10 @@ const questionRepository = require("../repositories/questionRepository");
 const answerPhotoService = require("../services/answerPhotoService");
 const todayKey = require("../utils/todayKey");
 
+const getAnswerOrderByDateKey = async (userId, dateKey) => {
+  return await answerRepository.countSubmittedAnswersBeforeOrOnDate(userId, dateKey);
+};
+
 const getOrCreateTodayAnswer = async (userId) => {
   const dateKey = todayKey();
   let answer = await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
@@ -25,7 +29,11 @@ const getOrCreateTodayAnswer = async (userId) => {
     answer = await answerRepository.findTodayAnswerWithPhotoUrls(userId, dateKey);
   }
 
-  answer.order = await getAnswerOrderForToday(userId, dateKey);
+  let order = await getAnswerOrderByDateKey(userId, dateKey);
+  if (answer.isDraft === true) {
+    order = order + 1;
+  }
+  answer.order = order;
 
   return answer;
 };
@@ -61,11 +69,6 @@ const getAnswerSummaryByAnswerId = async (userId, answerId) => {
   return await answerRepository.findAnswerSummaryByAnswerId(userId, answerId);
 };
 
-const getAnswerOrderForToday = async (userId, dateKey) => {
-  const count = await answerRepository.countSubmittedAnswersExcludingDate(userId, dateKey);
-  return count + 1;
-};
-
 const getAnswerDetailByAnswerId = async (userId, answerId) => {
   const answer = await answerRepository.findAnswerDetailByAnswerId(userId, answerId);
   if (!answer) return null;
@@ -76,7 +79,11 @@ const getAnswerDetailByAnswerId = async (userId, answerId) => {
   );
   delete answerObj.photoIds;
 
-  answerObj.order = await getAnswerOrderForToday(userId, answer.dateKey);
+  let order = await getAnswerOrderByDateKey(userId, answer.dateKey);
+  if (answer.isDraft === true && answer.dateKey === todayKey()) {
+    order = order + 1;
+  }
+  answerObj.order = order;
 
   return answerObj;
 };
