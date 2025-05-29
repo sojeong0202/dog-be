@@ -127,6 +127,7 @@ const getAnswersByYearAndMonth = async (req, res) => {
     const result = answers.map((a) => ({
       id: a._id,
       date: new Date(a.createdAt).getDate(),
+      isDraft: a.isDraft,
     }));
 
     res.status(200).json({
