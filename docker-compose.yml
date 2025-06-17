@@ -1,0 +1,16 @@
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - "443:8443"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /home/ubuntu/.oci:/root/.oci:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    environment:
+      - TZ=Asia/Seoul
