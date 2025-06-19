@@ -19,6 +19,8 @@ const { handleAuthError } = require("./middlewares/errorHandler");
 const app = express();
 connectDB();
 
+require("./batch/dailyEmailJob");
+
 app.use(
   cors({
     origin: [process.env.FRONT_ORIGIN, "http://localhost:3000"],
