@@ -21,10 +21,17 @@ const updateUserById = (userId, updateData) => {
   return User.findByIdAndUpdate(userId, { $set: updateData }, { new: true });
 };
 
+const getAllUsers = async () => {
+  return await User.find({ email: { $ne: null } });
+};
+
+module.exports = { getAllUsers };
+
 module.exports = {
   findByKakaoId,
   findById,
   findByIdWithProfilePhoto,
   createUser,
   updateUserById,
+  getAllUsers,
 };
